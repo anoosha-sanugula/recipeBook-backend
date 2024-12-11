@@ -18,14 +18,12 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: example
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
+      - name: Check out repository code
+        uses: actions/checkout@v4
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "20"
-
+          node-version: "21"
       - name: Install dependencies
         run: npm install
 
