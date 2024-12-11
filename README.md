@@ -4,12 +4,6 @@
 
 This is the backend for the RecipeBook web app built using Node.js and MongoDB.
 
-### Features
-
-- CRUD operations (Create, Read, Update, Delete) for managing recipes.
-- Basic validation for user data.
-- Database interactions using MongoDB with Mongoose.
-
 ### Prerequisites
 
 - Node.js
