@@ -1,0 +1,28 @@
+name: RecipeBook React
+run-name: RecipeBook
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Workflow-for-Backend:
+    runs-on: macos-latest
+    steps:
+      services:
+        mongodb:
+          ports:
+            - 27017:27017       
+          env:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
