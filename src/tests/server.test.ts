@@ -4,7 +4,7 @@ import { main } from "../app";
 jest.mock("../server", () => ({
   sequelize: {
     authenticate: jest.fn(),
-    sync:jest.fn()
+    sync: jest.fn(),
   },
 }));
 
@@ -22,15 +22,12 @@ describe("Database Connection Test", () => {
     );
   });
 
-  it("should log an error when the connection fails", async () => {
+  it("should throw an error when the connection fails", async () => {
     (sequelize.authenticate as jest.Mock).mockRejectedValueOnce(
       new Error("Unable to connect")
     );
-    console.error = jest.fn();
-    await main();
-    expect(console.error).toHaveBeenCalledWith(
-      "Unable to connect to the database:",
-      new Error("Unable to connect")
+    await expect(main()).rejects.toThrow(
+      "Unable to connect to the database: Unable to connect"
     );
   });
 });
