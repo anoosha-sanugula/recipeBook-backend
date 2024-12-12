@@ -13,7 +13,7 @@ jobs:
     services:
       postgres:
         image: postgres:15-alpine
-        environment:
+        env:
           POSTGRES_PASSWORD: mysecretpassword
           POSTGRES_DB: my_test_db
         ports:
