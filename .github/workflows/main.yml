@@ -1,4 +1,4 @@
-name: RecipeBook React
+name: RecipeBook Postgre Backend
 run-name: RecipeBook
 on:
   push:
