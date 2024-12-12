@@ -1,5 +1,3 @@
-import { User as UserClass } from "../../classes/user/user";
-import { Sequelize } from "sequelize";
 import userRoutes from "../../routes/user/user";
 import request from "supertest";
 import { User as userType } from "../../types/user";
