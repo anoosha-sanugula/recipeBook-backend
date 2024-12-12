@@ -15,7 +15,7 @@ This is the backend for the RecipeBook web app built using Node.js and Postgres.
 1.  Clone the Repository
     Start by cloning the repository to your local machine:
 
-        https://github.com/anoosha-sanugula/recipeBook-backend.git
+        git clone https://github.com/anoosha-sanugula/recipeBook-backend.git
         cd recipeBook-backend
 
 2.  Run the following command to install the required npm packages:
