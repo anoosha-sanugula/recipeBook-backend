@@ -10,15 +10,6 @@ on:
 jobs:
   Workflow-for-Backend:
     runs-on: ubuntu-latest
-    services:
-      mongodb:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-        env:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: example
-
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -26,6 +17,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "21"
+      - name: Set up PostgreSQL
+        uses: pgaction/setup-postgresql@v2
+        with:
+          pg_version: "15"
       - name: Install dependencies
         run: npm install
       - name: Run tests
