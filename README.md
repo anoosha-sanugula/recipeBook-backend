@@ -2,13 +2,13 @@
 
 ### Description
 
-This is the backend for the RecipeBook web app built using Node.js and MongoDB.
+This is the backend for the RecipeBook web app built using Node.js and Postgres.
 
 ### Prerequisites
 
 - Node.js
 - npm
-- MongoDB
+- PostgreSQL database
 
 ### Getting Started
 
