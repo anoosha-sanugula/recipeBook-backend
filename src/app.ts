@@ -1,12 +1,11 @@
-import { connectToDatabase, sequelize } from "./database";
+import { sequelize } from "./server";
 
-const main = async () => {
+export const main = async () => {
   try {
-    await connectToDatabase();
-    await sequelize.sync({ force: false });
-    console.log("Database created successfully.");
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
   } catch (error: any) {
-    console.error("Error during synchronization:", error);
+    console.error("Unable to connect to the database:", error);
   }
 };
 
