@@ -10,6 +10,14 @@ on:
 jobs:
   Workflow-for-Backend:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        environment:
+          POSTGRES_PASSWORD: mysecretpassword
+          POSTGRES_DB: my_test_db
+        ports:
+          - "5432:5432"
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -17,10 +25,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "21"
-      - name: Set up PostgreSQL
-        uses: pgaction/setup-postgresql@v2
-        with:
-          pg_version: "15"
       - name: Install dependencies
         run: npm install
       - name: Run tests
