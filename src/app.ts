@@ -6,7 +6,7 @@ export const main = async () => {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
   } catch (error: any) {
-    console.error("Unable to connect to the database:", error);
+    throw new Error(`Unable to connect to the database: ${error.message}`);
   }
 };
 
