@@ -26,10 +26,12 @@ export const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    profileImage: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     timestamps: false,
   }
 );
-
-module.exports = User;
