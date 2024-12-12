@@ -12,7 +12,7 @@ export const main = async () => {
   try {
     const PORT = process.env.PORT || 3002;
     await sequelize.authenticate();
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ force: false });
     console.log("Connection has been established successfully.");
 
     app.use("/recipebook", userRoutes);
