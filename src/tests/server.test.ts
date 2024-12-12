@@ -4,6 +4,7 @@ import { main } from "../app";
 jest.mock("../server", () => ({
   sequelize: {
     authenticate: jest.fn(),
+    sync:jest.fn()
   },
 }));
 
