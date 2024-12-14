@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - recipeBook
   pull_request:
     branches:
       - main

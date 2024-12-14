@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../server";
 
-export const User = sequelize.define(
-  "User",
+export const Users = sequelize.define(
+  "Users",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -26,10 +26,12 @@ export const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     timestamps: false,
   }
 );
-
-module.exports = User;
