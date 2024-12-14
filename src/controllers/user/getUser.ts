@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { User } from "../../models/User";
-import { User as UserClass } from "../../classes/user/user";
+import { Users } from "../../models/User";
+import { User } from "../../classes/user/user";
 import argon2 from "argon2";
 
 export const getUser = async (req: Request, res: Response): Promise<any> => {
@@ -8,7 +8,7 @@ export const getUser = async (req: Request, res: Response): Promise<any> => {
   const password = req.query.password as string;
 
   try {
-    let existUser: any = await User.findOne({
+    let existUser: any = await Users.findOne({
       where: {
         username: username,
       },
@@ -16,7 +16,7 @@ export const getUser = async (req: Request, res: Response): Promise<any> => {
     if (!existUser) {
       return res.status(404).json({ message: "User doesn't exist" });
     }
-    const user = new UserClass(
+    const user = new User(
       existUser.dataValues.username,
       existUser.dataValues.email,
       existUser.dataValues.password,
