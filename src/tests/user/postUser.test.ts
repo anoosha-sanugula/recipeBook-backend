@@ -1,12 +1,14 @@
 import userRoutes from "../../routes/user/user";
 import request from "supertest";
-import { User as userType } from "../../types/user";
 import express from "express";
 import { User } from "../../models/User";
+import { User as UserClass } from "../../classes/user/user";
+import argon2 from "argon2";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 app.use("/recipebook", userRoutes);
 jest.mock("../../models/User", () => ({
   User: {
@@ -14,15 +16,17 @@ jest.mock("../../models/User", () => ({
     create: jest.fn(),
   },
 }));
+jest.mock("argon2", () => ({
+  hash: jest.fn(),
+}));
 
 describe("POST /users", () => {
-  const validUser: userType = {
-    username: "testuser",
-    email: "test@example.com",
-    password: "password123",
-    profileImage: "./gallery/image.jpg",
-  };
-
+  const validUser = new UserClass(
+    "testuser",
+    "test@example.com",
+    "password123",
+    "India"
+  );
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -39,6 +43,20 @@ describe("POST /users", () => {
     expect(response.body.message).toBe("User created successfully");
     expect(response.body.data.username).toBe(validUser.username);
     expect(response.body.data.email).toBe(validUser.email);
+  });
+
+  it("should throw an error when password encryption fails", async () => {
+    (argon2.hash as jest.Mock).mockRejectedValue(new Error("Hashing failed"));
+    const user = new UserClass(
+      "testuser",
+      "test@example.com",
+      "password123",
+      "India"
+    );
+
+    await expect(user.encryptPassword()).rejects.toThrow(
+      "Error while password encryption"
+    );
   });
 
   it("should return an error if the user already exists", async () => {
