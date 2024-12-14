@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { User } from "../models/User";
+import { Users } from "../models/User";
 import { sequelize } from "../server";
 
 const Recipe = sequelize.define(
@@ -32,7 +32,7 @@ const Recipe = sequelize.define(
   }
 );
 
-Recipe.belongsTo(User, {
+Recipe.belongsTo(Users, {
   foreignKey: {
     allowNull: false,
   },

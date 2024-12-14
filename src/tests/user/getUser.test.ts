@@ -1,14 +1,14 @@
 import userRoutes from "../../routes/user/user";
 import request from "supertest";
 import express from "express";
-import { User } from "../../models/User";
+import { Users } from "../../models/User";
 import argon2 from "argon2";
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/recipebook", userRoutes);
 jest.mock("../../models/User", () => ({
-  User: {
+  Users: {
     findOne: jest.fn(),
   },
 }));
@@ -29,7 +29,7 @@ describe("GET /users?{username&password}", () => {
   });
 
   it("should retrieve user successfully", async () => {
-    (User.findOne as jest.Mock).mockResolvedValue({
+    (Users.findOne as jest.Mock).mockResolvedValue({
       dataValues: validUser,
     });
 
@@ -46,7 +46,7 @@ describe("GET /users?{username&password}", () => {
   });
 
   it("should return an error if the user not exists", async () => {
-    (User.findOne as jest.Mock).mockResolvedValue(null);
+    (Users.findOne as jest.Mock).mockResolvedValue(null);
 
     const response = await request(app).get(
       "/recipebook/users?username=Hari&password=hari@123"
@@ -56,7 +56,7 @@ describe("GET /users?{username&password}", () => {
     expect(response.body.message).toBe("User doesn't exist");
   });
   it("should return an error if the password is incorrect", async () => {
-    (User.findOne as jest.Mock).mockResolvedValue({
+    (Users.findOne as jest.Mock).mockResolvedValue({
       dataValues: validUser,
     });
     (argon2.verify as jest.Mock).mockResolvedValue(false);
@@ -70,7 +70,7 @@ describe("GET /users?{username&password}", () => {
   });
 
   it("should return an error if there is a server issue", async () => {
-    (User.findOne as jest.Mock).mockRejectedValue(new Error("Database error"));
+    (Users.findOne as jest.Mock).mockRejectedValue(new Error("Database error"));
 
     const response = await request(app).get(
       "/recipebook/users?username=Hari&password=hari@123"
