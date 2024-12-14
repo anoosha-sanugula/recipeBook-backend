@@ -1,8 +1,8 @@
 import userRoutes from "../../routes/user/user";
 import request from "supertest";
 import express from "express";
-import { User } from "../../models/User";
-import { User as UserClass } from "../../classes/user/user";
+import { Users } from "../../models/User";
+import { User } from '../../classes/user/user'
 import argon2 from "argon2";
 
 const app = express();
@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use("/recipebook", userRoutes);
 jest.mock("../../models/User", () => ({
-  User: {
+  Users: {
     findOne: jest.fn(),
     create: jest.fn(),
   },
@@ -21,7 +21,7 @@ jest.mock("argon2", () => ({
 }));
 
 describe("POST /users", () => {
-  const validUser = new UserClass(
+  const validUser = new User(
     "testuser",
     "test@example.com",
     "password123",
@@ -32,8 +32,8 @@ describe("POST /users", () => {
   });
 
   it("should create a new user successfully", async () => {
-    (User.findOne as jest.Mock).mockResolvedValue(null);
-    (User.create as jest.Mock).mockResolvedValue(validUser);
+    (Users.findOne as jest.Mock).mockResolvedValue(null);
+    (Users.create as jest.Mock).mockResolvedValue(validUser);
 
     const response = await request(app)
       .post("/recipebook/users")
@@ -47,7 +47,7 @@ describe("POST /users", () => {
 
   it("should throw an error when password encryption fails", async () => {
     (argon2.hash as jest.Mock).mockRejectedValue(new Error("Hashing failed"));
-    const user = new UserClass(
+    const user = new User(
       "testuser",
       "test@example.com",
       "password123",
@@ -60,7 +60,7 @@ describe("POST /users", () => {
   });
 
   it("should return an error if the user already exists", async () => {
-    (User.findOne as jest.Mock).mockResolvedValue(validUser);
+    (Users.findOne as jest.Mock).mockResolvedValue(validUser);
 
     const response = await request(app)
       .post("/recipebook/users")
@@ -71,8 +71,8 @@ describe("POST /users", () => {
   });
 
   it("should return an error if there is a server issue", async () => {
-    (User.findOne as jest.Mock).mockResolvedValue(null);
-    (User.create as jest.Mock).mockRejectedValue(new Error("Database error"));
+    (Users.findOne as jest.Mock).mockResolvedValue(null);
+    (Users.create as jest.Mock).mockRejectedValue(new Error("Database error"));
 
     const response = await request(app)
       .post("/recipebook/users")

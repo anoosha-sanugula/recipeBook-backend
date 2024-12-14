@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
-import { User } from "../../models/User";
-import { User as UserClass } from "../../classes/user/user";
+import { Users } from "../../models/User";
+import { User } from "../../classes/user/user";
 
-export const postUser = async (req: Request, res: Response): Promise<any> => {
+export const createUser = async (req: Request, res: Response): Promise<any> => {
   const { username, password, email, country } = req.body;
   try {
-    let existUser = await User.findOne({ where: { username: username } });
+    let existUser = await Users.findOne({ where: { username: username } });
 
     if (existUser) {
       return res.status(200).json({ message: "User already exist" });
     }
-    const new_user = new UserClass(username, email, password, country);
+    const new_user = new User(username, email, password, country);
     await new_user.encryptPassword();
 
-    await User.create({
+    await Users.create({
       username: new_user.username,
       password: new_user.password,
       email: new_user.email,

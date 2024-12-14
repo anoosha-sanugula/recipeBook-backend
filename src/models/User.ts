@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../server";
 
-export const User = sequelize.define(
-  "User",
+export const Users = sequelize.define(
+  "Users",
   {
     id: {
       type: DataTypes.INTEGER,
