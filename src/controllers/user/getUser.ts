@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User } from "../../models/User";
 import { User as UserClass } from "../../classes/user/user";
-import { User as userType } from "../../types/user";
+import argon2 from "argon2";
 
 export const getUser = async (req: Request, res: Response): Promise<any> => {
   const username = req.query.username as string;
@@ -11,18 +11,26 @@ export const getUser = async (req: Request, res: Response): Promise<any> => {
     let existUser: any = await User.findOne({
       where: {
         username: username,
-        password: password,
       },
     });
     if (!existUser) {
       return res.status(404).json({ message: "User doesn't exist" });
     }
-    const user: userType = new UserClass(
-      existUser.username,
-      existUser.email,
-      existUser.password,
-      existUser.profileImage
+    const user = new UserClass(
+      existUser.dataValues.username,
+      existUser.dataValues.email,
+      existUser.dataValues.password,
+      existUser.dataValues.country
     );
+    const passwordMatch = await argon2.verify(
+      existUser.dataValues.password,
+      password
+    );
+    if (!passwordMatch) {
+      res.status(400).json({ message: "Incorrect Password" });
+      return;
+    }
+
     return res
       .status(200)
       .json({ message: "User retrieved successfully", data: user });
