@@ -1,23 +1,24 @@
 import { Request, Response } from "express";
 import { User } from "../../models/User";
 import { User as UserClass } from "../../classes/user/user";
-import { User as userType } from "../../types/user";
 
 export const postUser = async (req: Request, res: Response): Promise<any> => {
-  const { username, password, email, profileImage } = req.body;
+  const { username, password, email, country } = req.body;
   try {
     let existUser = await User.findOne({ where: { username: username } });
 
     if (existUser) {
       return res.status(200).json({ message: "User already exist" });
     }
-    const new_user: userType = new UserClass(
-      username,
-      email,
-      password,
-      profileImage
-    );
-    await User.create(new_user);
+    const new_user = new UserClass(username, email, password, country);
+    await new_user.encryptPassword();
+
+    await User.create({
+      username: new_user.username,
+      password: new_user.password,
+      email: new_user.email,
+      country: new_user.country,
+    });
     return res
       .status(201)
       .json({ message: "User created successfully", data: new_user });
