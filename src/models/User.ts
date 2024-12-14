@@ -26,7 +26,7 @@ export const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    profileImage: {
+    country: {
       type: DataTypes.STRING,
       allowNull: true,
     },
