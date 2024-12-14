@@ -10,9 +10,9 @@ app.use(express.json());
 
 export const main = async () => {
   try {
-    const PORT = process.env.PORT || 3002;
+    const PORT = process.env.PORT || 3000;
     await sequelize.authenticate();
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ alter: true });
     console.log("Connection has been established successfully.");
 
     app.use("/recipebook", userRoutes);
