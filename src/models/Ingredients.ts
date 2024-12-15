@@ -44,6 +44,7 @@ export const Ingredients = sequelize.define(
         key: "id",
       },
       allowNull: false,
+      onDelete: "CASCADE", 
     },
   },
   {
