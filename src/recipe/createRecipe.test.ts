@@ -3,7 +3,7 @@ import { sequelize } from "../server";
 import { Recipe } from "../models/Recipe";
 import { Ingredients } from "../models/Ingredients";
 import recipeRoutes from "../routes/recipe/recipe";
-import express from "express";
+import express, { NextFunction } from "express";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -12,6 +12,10 @@ app.use("/recipebook", recipeRoutes);
 
 jest.mock("../models/Recipe");
 jest.mock("../models/Ingredients");
+jest.mock("../user/loginUser.controller", () => ({
+  authenticateToken: (req: Request, res: Response, next: NextFunction) =>
+    next(),
+}));
 
 describe("POST /recipes", () => {
   let transactionMock: any;

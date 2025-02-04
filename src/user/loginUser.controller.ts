@@ -3,15 +3,17 @@ import { Users } from "../models/User";
 import { User } from "../classes/user/user";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 export function authenticateToken(
   req: Request,
   res: Response,
   next: NextFunction
 ): any {
+  console.log("heyy req", req.headers);
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-
+  console.log("token", token);
   if (!token) {
     return res.sendStatus(401);
   }
@@ -66,11 +68,7 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
         .json({ message: "Access token secret is not configured" });
     }
     let user_details = { username: user.username };
-    const accessToken = jwt.sign(
-      { user_details },
-      accessTokenSecret
-    );
-
+    const accessToken = jwt.sign({ user_details }, accessTokenSecret);
     return res.status(200).json({
       message: "User retrieved successfully",
       data: user,

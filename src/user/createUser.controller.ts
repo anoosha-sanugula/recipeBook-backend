@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Users } from "../models/User";
 import { User } from "../classes/user/user";
 import jwt from "jsonwebtoken";
+import 'dotenv/config'
 
 export const createUser = async (req: Request, res: Response): Promise<any> => {
   const { username, password, email, country } = req.body;

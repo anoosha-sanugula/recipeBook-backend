@@ -2,6 +2,7 @@ import request from "supertest";
 import { Recipe } from "../models/Recipe";
 import recipeRoutes from "../routes/recipe/recipe";
 import express from "express";
+import { NextFunction, Request, Response } from "express";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -12,6 +13,10 @@ jest.mock("../models/Recipe", () => ({
   Recipe: {
     findAll: jest.fn(),
   },
+}));
+jest.mock("../user/loginUser.controller", () => ({
+  authenticateToken: (req: Request, res: Response, next: NextFunction) =>
+    next(),
 }));
 
 describe("GET /recipes", () => {
