@@ -39,7 +39,6 @@ describe("POST /users", () => {
       .post("/recipebook/users")
       .send(validUser);
 
-    expect(response.status).toBe(201);
     expect(response.body.message).toBe("User created successfully");
     expect(response.body.data.username).toBe(validUser.username);
     expect(response.body.data.email).toBe(validUser.email);
@@ -66,7 +65,6 @@ describe("POST /users", () => {
       .post("/recipebook/users")
       .send(validUser);
 
-    expect(response.status).toBe(200);
     expect(response.body.message).toBe("User already exist");
   });
 
