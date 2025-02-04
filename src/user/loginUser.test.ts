@@ -15,6 +15,13 @@ jest.mock("../models/User", () => ({
 jest.mock("argon2", () => ({
   verify: jest.fn(),
 }));
+beforeAll(() => {
+  process.env.ACCESS_TOKEN_SECRET = 'your_fake_secret'; 
+});
+
+afterAll(() => {
+  delete process.env.ACCESS_TOKEN_SECRET;
+});
 
 describe("GET /users?{username&password}", () => {
   const validUser = {

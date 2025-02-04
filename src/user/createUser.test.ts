@@ -20,6 +20,16 @@ jest.mock("argon2", () => ({
   hash: jest.fn(),
 }));
 
+
+
+beforeAll(() => {
+  process.env.ACCESS_TOKEN_SECRET = 'your_fake_secret'; 
+});
+
+afterAll(() => {
+  delete process.env.ACCESS_TOKEN_SECRET;
+});
+
 describe("POST /users", () => {
   const validUser = new User(
     "testuser",
