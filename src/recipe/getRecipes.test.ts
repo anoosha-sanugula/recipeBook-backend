@@ -1,6 +1,6 @@
 import request from "supertest";
-import { Recipe } from "../../models/Recipe";
-import recipeRoutes from "../../routes/recipe/recipe";
+import { Recipe } from "../models/Recipe";
+import recipeRoutes from "../routes/recipe/recipe";
 import express from "express";
 
 const app = express();
@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/recipebook", recipeRoutes);
 
-jest.mock("../../models/Recipe", () => ({
+jest.mock("../models/Recipe", () => ({
   Recipe: {
     findAll: jest.fn(),
   },

@@ -1,12 +1,13 @@
 import express from "express";
-import { createRecipe } from "../../controllers/recipe/createRecipes";
-import { getRecipes } from "../../controllers/recipe/getRecipes";
-import { getRecipeById } from "../../controllers/recipe/getRecipeById";
+import { createRecipe } from "../../recipe/createRecipes.controller";
+import { getRecipes } from "../../recipe/getRecipes.controller";
+import { getRecipeById } from "../../recipe/getRecipeById.controller";
+import { authenticateToken } from "../../user/loginUser.controller";
 const recipeRoutes = express();
 recipeRoutes.use(express.urlencoded({ extended: true }));
 recipeRoutes.use(express.json());
 
-recipeRoutes.post("/recipes", createRecipe);
-recipeRoutes.get("/recipes", getRecipes);
-recipeRoutes.get("/recipes/:recipeId", getRecipeById);
+recipeRoutes.post("/recipes", authenticateToken, createRecipe);
+recipeRoutes.get("/recipes", authenticateToken, getRecipes);
+recipeRoutes.get("/recipes/:recipeId", authenticateToken, getRecipeById);
 export default recipeRoutes;

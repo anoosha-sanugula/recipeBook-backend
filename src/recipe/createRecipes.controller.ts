@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Ingredients } from "../../models/Ingredients";
-import { sequelize } from "../../server";
-import { Recipe } from "../../models/Recipe";
+import { Ingredients } from "../models/Ingredients";
+import { sequelize } from "../server";
+import { Recipe } from "../models/Recipe";
 
 export const createRecipe = async (
   req: Request,
@@ -19,6 +19,9 @@ export const createRecipe = async (
     nutritionFact,
     ingredients,
   } = req.body;
+
+  if (!title || !category)
+    return res.status(400).json({ message: "Please fill the required fields" });
 
   const transaction = await sequelize.transaction();
 
@@ -41,12 +44,12 @@ export const createRecipe = async (
     const ingredient = ingredients.map(async (ingredient: any) => {
       try {
         if (!ingredient.name || !ingredient.quantity || !ingredient.unit) {
-          throw new Error(
-            `Invalid ingredient data: ${JSON.stringify(ingredient)}`
-          );
+          return res.status(400).json({
+            message: `Invalid ingredient data`,
+          });
         }
 
-        const createdIngredient = await Ingredients.create(
+        await Ingredients.create(
           {
             name: ingredient.name,
             quantity: ingredient.quantity,
@@ -57,9 +60,9 @@ export const createRecipe = async (
           { transaction }
         );
       } catch (ingredientError) {
-        throw new Error(
-          `Error while creating ingredient data:${ingredientError}`
-        );
+        return res.status(401).json({
+          error: `Error while creating ingredient data:${ingredientError}`,
+        });
       }
     });
 

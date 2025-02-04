@@ -1,7 +1,7 @@
-import { sequelize } from "../server";
+import { sequelize } from "./server";
 import express from "express";
 import cors from "cors";
-import userRoutes from "../routes/user/user";
+import userRoutes from "./routes/user/user";
 import request from "supertest";
 
 const app = express();
@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/recipebook", userRoutes);
 
-jest.mock("../server", () => ({
+jest.mock("./server", () => ({
   sequelize: {
     authenticate: jest.fn(),
     sync: jest.fn(),

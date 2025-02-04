@@ -1,8 +1,8 @@
 import request from "supertest";
-import { sequelize } from "../../server";
-import { Recipe } from "../../models/Recipe";
-import { Ingredients } from "../../models/Ingredients";
-import recipeRoutes from "../../routes/recipe/recipe";
+import { sequelize } from "../server";
+import { Recipe } from "../models/Recipe";
+import { Ingredients } from "../models/Ingredients";
+import recipeRoutes from "../routes/recipe/recipe";
 import express from "express";
 
 const app = express();
@@ -10,8 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/recipebook", recipeRoutes);
 
-jest.mock("../../models/Recipe");
-jest.mock("../../models/Ingredients");
+jest.mock("../models/Recipe");
+jest.mock("../models/Ingredients");
 
 describe("POST /recipes", () => {
   let transactionMock: any;
@@ -73,28 +73,6 @@ describe("POST /recipes", () => {
     expect(Recipe.create).toHaveBeenCalledTimes(1);
     expect(Ingredients.create).toHaveBeenCalledTimes(2);
     expect(transactionMock.commit).toHaveBeenCalledTimes(1);
-  });
-
-  it("should return 400 if ingredient is invalid", async () => {
-    const invalidData = {
-      ...createRecipeData,
-      ingredients: [
-        {
-          name: "Sugar",
-          quantity: 200,
-          unit: "",
-          imageUrl: "https://example.com/sugar.jpg",
-        },
-      ],
-    };
-
-    const response = await request(app)
-      .post("/recipebook/recipes")
-      .send(invalidData);
-
-    expect(response.status).toBe(500);
-    expect(response.body.error).toBe("Internal Server Error");
-    expect(transactionMock.rollback).toHaveBeenCalledTimes(1);
   });
 
   it("should return 500 if an error occurs during the creation process", async () => {

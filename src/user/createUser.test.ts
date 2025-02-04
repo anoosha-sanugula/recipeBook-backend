@@ -1,8 +1,8 @@
-import userRoutes from "../../routes/user/user";
+import userRoutes from "../routes/user/user";
 import request from "supertest";
 import express from "express";
-import { Users } from "../../models/User";
-import { User } from '../../classes/user/user'
+import { Users } from "../models/User";
+import { User } from "../classes/user/user";
 import argon2 from "argon2";
 
 const app = express();
@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/recipebook", userRoutes);
-jest.mock("../../models/User", () => ({
+jest.mock("../models/User", () => ({
   Users: {
     findOne: jest.fn(),
     create: jest.fn(),

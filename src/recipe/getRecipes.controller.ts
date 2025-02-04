@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Recipe } from "../../models/Recipe";
-import { Ingredients } from "../../models/Ingredients";
+import { Recipe } from "../models/Recipe";
+import { Ingredients } from "../models/Ingredients";
 
 export const getRecipes = async (req: Request, res: Response): Promise<any> => {
   try {
