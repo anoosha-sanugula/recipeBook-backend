@@ -10,10 +10,8 @@ export function authenticateToken(
   res: Response,
   next: NextFunction
 ): any {
-  console.log("heyy req", req.headers);
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  console.log("token", token);
   if (!token) {
     return res.sendStatus(401);
   }
