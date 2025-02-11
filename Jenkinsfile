@@ -24,7 +24,7 @@ pipeline {
                 sh 'npm run test'
             }
         }
-        stage('Build docker image'){
+        stage('Build Docker image'){
             steps{
                 script{
                     dockerImage=docker.build registry
