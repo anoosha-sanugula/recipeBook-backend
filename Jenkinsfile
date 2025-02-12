@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running Docker container...'
-                    sh 'docker run --name frontend-container -d ${registry}'
+                    sh 'docker run --name backend-container -d ${registry}'
                 }
             }
         }
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script {
                     echo 'Cleaning up Docker container...'
-                    sh 'docker rm -f frontend-container || true' 
+                    sh 'docker rm -f backend-container || true' 
                 }
             }
         }
