@@ -1,13 +1,13 @@
-import userRoutes from "../../routes/user/user";
+import userRoutes from "../routes/user/user";
 import request from "supertest";
 import express from "express";
-import { Users } from "../../models/User";
+import { Users } from "../models/User";
 import argon2 from "argon2";
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/recipebook", userRoutes);
-jest.mock("../../models/User", () => ({
+jest.mock("../models/User", () => ({
   Users: {
     findOne: jest.fn(),
   },
@@ -15,6 +15,13 @@ jest.mock("../../models/User", () => ({
 jest.mock("argon2", () => ({
   verify: jest.fn(),
 }));
+beforeAll(() => {
+  process.env.ACCESS_TOKEN_SECRET = 'your_fake_secret'; 
+});
+
+afterAll(() => {
+  delete process.env.ACCESS_TOKEN_SECRET;
+});
 
 describe("GET /users?{username&password}", () => {
   const validUser = {
@@ -35,9 +42,9 @@ describe("GET /users?{username&password}", () => {
 
     (argon2.verify as jest.Mock).mockResolvedValue(true);
 
-    const response = await request(app).get(
-      "/recipebook/users?username=Hari&password=hari@123"
-    );
+    const response = await request(app)
+      .post("/recipebook/user")
+      .send(validUser);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("User retrieved successfully");
@@ -48,9 +55,9 @@ describe("GET /users?{username&password}", () => {
   it("should return an error if the user not exists", async () => {
     (Users.findOne as jest.Mock).mockResolvedValue(null);
 
-    const response = await request(app).get(
-      "/recipebook/users?username=Hari&password=hari@123"
-    );
+    const response = await request(app)
+      .post("/recipebook/user")
+      .send(validUser);
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe("User doesn't exist");
@@ -61,10 +68,9 @@ describe("GET /users?{username&password}", () => {
     });
     (argon2.verify as jest.Mock).mockResolvedValue(false);
 
-    const response = await request(app).get(
-      "/recipebook/users?username=Hari&password=wrongpassword"
-    );
-
+    const response = await request(app)
+      .post("/recipebook/user")
+      .send(validUser);
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("Incorrect Password");
   });
@@ -72,10 +78,9 @@ describe("GET /users?{username&password}", () => {
   it("should return an error if there is a server issue", async () => {
     (Users.findOne as jest.Mock).mockRejectedValue(new Error("Database error"));
 
-    const response = await request(app).get(
-      "/recipebook/users?username=Hari&password=hari@123"
-    );
-
+    const response = await request(app)
+      .post("/recipebook/user")
+      .send(validUser);
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("Error while user retrieving");
   });

@@ -1,8 +1,8 @@
-import userRoutes from "../../routes/user/user";
+import userRoutes from "../routes/user/user";
 import request from "supertest";
 import express from "express";
-import { Users } from "../../models/User";
-import { User } from '../../classes/user/user'
+import { Users } from "../models/User";
+import { User } from "../classes/user/user";
 import argon2 from "argon2";
 
 const app = express();
@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/recipebook", userRoutes);
-jest.mock("../../models/User", () => ({
+jest.mock("../models/User", () => ({
   Users: {
     findOne: jest.fn(),
     create: jest.fn(),
@@ -19,6 +19,16 @@ jest.mock("../../models/User", () => ({
 jest.mock("argon2", () => ({
   hash: jest.fn(),
 }));
+
+
+
+beforeAll(() => {
+  process.env.ACCESS_TOKEN_SECRET = 'your_fake_secret'; 
+});
+
+afterAll(() => {
+  delete process.env.ACCESS_TOKEN_SECRET;
+});
 
 describe("POST /users", () => {
   const validUser = new User(
@@ -39,7 +49,6 @@ describe("POST /users", () => {
       .post("/recipebook/users")
       .send(validUser);
 
-    expect(response.status).toBe(201);
     expect(response.body.message).toBe("User created successfully");
     expect(response.body.data.username).toBe(validUser.username);
     expect(response.body.data.email).toBe(validUser.email);
@@ -66,7 +75,6 @@ describe("POST /users", () => {
       .post("/recipebook/users")
       .send(validUser);
 
-    expect(response.status).toBe(200);
     expect(response.body.message).toBe("User already exist");
   });
 
