@@ -40,6 +40,38 @@ pipeline {
                 }
             }
         }
+        stage('Pull Docker image'){
+            steps{
+                script {
+                    echo 'Pulling Docker image from Docker Hub...'
+                    sh 'docker pull ${registry}'
+                }
+            }
+        }
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    echo 'Running Docker container...'
+                    sh 'docker run --name frontend-container -d ${registry}'
+                }
+            }
+        }
+        stage('Verify Container Running') {
+            steps {
+                script {
+                    echo 'Verifying if the Docker container is running...'
+                    sh 'docker ps -a'
+                }
+            }
+        }
+        stage('Remove container'){
+            steps {
+                script {
+                    echo 'Cleaning up Docker container...'
+                    sh 'docker rm -f frontend-container || true' 
+                }
+            }
+        }
     }
     post {
         success {
@@ -49,6 +81,7 @@ pipeline {
             echo 'Pipeline failed.'
         }
         always {
+            echo "Sending email notification..."
             mail bcc: '', body: """'project:${env.JOB_NAME} Build number: ${env.BUILD_NUMBER}  url:${env.BUILD_URL}'""", subject: """'${currentBuild.result}'""", to: 'anooshasanugula@gmail.com'
         }
     }
